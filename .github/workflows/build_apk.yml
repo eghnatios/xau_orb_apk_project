@@ -27,7 +27,6 @@ jobs:
         run: |
           (buildozer android debug > build.log 2>&1) || (tail -n 150 build.log | head -n 85 && exit 1)
 
-
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
