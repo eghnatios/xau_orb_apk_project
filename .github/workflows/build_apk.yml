@@ -23,9 +23,10 @@ jobs:
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev libtinfo6 cmake libffi-dev libssl-dev lld libltdl-dev
           pip3 install --upgrade "setuptools<70" buildozer cython==0.29.36
 
-      - name: Build Debug APK
+            - name: Build Debug APK
         run: |
-          (yes | buildozer android debug > build.log 2>&1) || (tail -n 60 build.log && exit 1)
+          (buildozer android debug > build.log 2>&1) || (tail -n 150 build.log | head -n 85 && exit 1)
+
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
