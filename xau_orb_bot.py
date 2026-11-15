@@ -40,7 +40,53 @@ import traceback
 from datetime import datetime, timezone
 from functools import wraps
 
-import requests
+try:
+    import requests
+except ImportError:
+    import urllib.request as _ureq
+    import urllib.parse as _uparse
+    import urllib.error as _uerr
+    import ssl as _ssl
+
+    class _MiniResp:
+        def __init__(self, status, body_bytes):
+            self.status_code = status
+            self.text = body_bytes.decode("utf-8", errors="replace")
+        def json(self):
+            return json.loads(self.text) if self.text else {}
+
+    class _MiniRequests:
+        @staticmethod
+        def request(method, url, params=None, headers=None, json_data=None, data=None, timeout=10, **kwargs):
+            if "json" in kwargs and json_data is None:
+                json_data = kwargs["json"]
+            if params:
+                qs = _uparse.urlencode(params)
+                url = url + ("&" if "?" in url else "?") + qs
+            hdrs = dict(headers or {})
+            body = None
+            if json_data is not None:
+                body = json.dumps(json_data).encode("utf-8")
+                hdrs.setdefault("Content-Type", "application/json")
+            elif data is not None:
+                body = data.encode("utf-8") if isinstance(data, str) else data
+            req = _ureq.Request(url, data=body, headers=hdrs, method=method.upper())
+            ctx = _ssl.create_default_context()
+            try:
+                with _ureq.urlopen(req, timeout=timeout, context=ctx) as resp:
+                    return _MiniResp(resp.status, resp.read())
+            except _uerr.HTTPError as he:
+                return _MiniResp(he.code, he.read())
+
+        @classmethod
+        def get(cls, url, **kwargs):
+            return cls.request("GET", url, **kwargs)
+
+        @classmethod
+        def post(cls, url, **kwargs):
+            return cls.request("POST", url, **kwargs)
+
+    requests = _MiniRequests()
 try:
     import ccxt
 except ImportError:
