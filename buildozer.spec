@@ -5,7 +5,7 @@ package.domain = org.tarek
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
 version = 1.0
-requirements = python3,flask,werkzeug,jinja2,markupsafe,itsdangerous,click,blinker,requests,urllib3,certifi,idna,charset-normalizer==3.3.2,pyjnius
+requirements = python3,flask,werkzeug,jinja2,markupsafe,itsdangerous,click,blinker,pyjnius
 p4a.bootstrap = webview
 p4a.port = 8080
 orientation = portrait
