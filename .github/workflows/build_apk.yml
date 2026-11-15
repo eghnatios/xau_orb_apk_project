@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Debug APK
         run: |
-          yes | buildozer -v android debug
+          (yes | buildozer android debug > build.log 2>&1) || (tail -n 60 build.log && exit 1)
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
