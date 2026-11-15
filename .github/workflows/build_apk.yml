@@ -24,6 +24,10 @@ jobs:
           pip3 install --upgrade "setuptools<70" buildozer cython==0.29.36
 
       - name: Build Debug APK
+        env:
+          PIP_NO_BINARY: charset-normalizer,markupsafe
+          CHARSET_NORMALIZER_USE_MYPYC: "0"
+          MARKUPSAFE_NO_EXTENSIONS: "1"
         run: |
           (buildozer android debug > build.log 2>&1) || (tail -n 150 build.log | head -n 85 && exit 1)
 
