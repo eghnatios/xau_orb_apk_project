@@ -12,6 +12,7 @@ android.permissions = INTERNET,WAKE_LOCK,FOREGROUND_SERVICE,FOREGROUND_SERVICE_D
 android.api = 33
 android.minapi = 24
 android.archs = arm64-v8a
+android.accept_sdk_license = True
 android.allow_backup = True
 services = Orbservice:service.py:sticky
 
